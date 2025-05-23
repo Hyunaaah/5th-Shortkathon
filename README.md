@@ -47,26 +47,6 @@ BookReadTracker는
 - **읽기 타이머**  
   - ▶️ 시작/⏸️ 일시정지/■ 종료 기능  
   - 읽은 시간 자동 저장
-- **일일 독서량 제안**  
-  - 남은 페이지 ÷ 목표 기간(일) = 하루 권장 페이지 수
-  - 목표 기간 설정(예: 7일, 14일 등)
-- **읽기 기록 히스토리**  
-  - 날짜별 읽은 시간 및 진행 상태 확인
+- **읽기 인사이트 작성**  
+  - 읽고 난 후에 인사이트 작성 후 저장
 
----
-
-## 기술 스택
-- **Frontend**: SwiftUI (iOS)  
-- **Backend**: Node.js + Express  
-- **Database**: MongoDB  
-- **Authentication**: JWT  
-- **배포**: Docker, AWS EC2
-
----
-
-## 설치
-
-1. 저장소 클론  
-   ```bash
-   git clone https://github.com/yourusername/BookReadTracker.git
-   cd BookReadTracker
