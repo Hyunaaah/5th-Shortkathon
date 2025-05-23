@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @State private var remainingTime: TimeInterval = 0
+
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -37,7 +39,7 @@ struct ContentView: View {
                     }
                     .tag(0)
                 
-                AddBookView(onAdd: { _ in })
+                AddBookView(remainingTime: $remainingTime, onAdd: { _ in })
                     .tabItem{
                         Image(systemName: selectedTab == 1 ? "plus.app.fill" : "plus.app")
                     }

@@ -5,10 +5,10 @@ import UserNotifications
 struct AddBookView: View {
     //    @Environment(\.dismiss) var dismiss
     @State private var selectedImage: UIImage? = nil
-           @State private var photoItem: PhotosPickerItem? = nil
-
-    @State private var wakeUp = Date()
+    @State private var photoItem: PhotosPickerItem? = nil
     
+    @State private var wakeUp = Date()
+    @Binding var remainingTime: TimeInterval
     
     @State private var title: String = ""
     @State private var author: String = ""
@@ -79,6 +79,11 @@ struct AddBookView: View {
         }
     }
     
+    //시간 텀 계산
+    func calculateRemainingTime() {
+        let interval = endTime.timeIntervalSince(startTime) // 초 단위 TimeInterval (Double)
+        remainingTime = max(0, interval) // 음수 방지
+    }
     
     
     var body: some View {
@@ -119,103 +124,102 @@ struct AddBookView: View {
                         .frame(maxWidth: .infinity)
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(16)
-                }
-                .padding(.horizontal)
-                .onAppear(perform: requestNotificationPermission)
-                
-                //종료시간
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("종료 시간")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(.wheel)
-                        .labelsHidden()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(16)
-                    
-                    
-                    
-                }
-                .padding(.horizontal)
-                // ✅ 표지 추가 버튼
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("표지")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    
-                    
-                    
-                    PhotosPicker(
-                               selection: $photoItem,
-                               matching: .images,
-                               photoLibrary: .shared()
-                    ) {
-                        if let image = selectedImage {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                                .shadow(radius: 3)
-                        } else {
-                            Image(systemName: "photo.on.rectangle")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .foregroundColor(.gray)
-                                .padding()
+                        .onChange(of: startTime) { _ in
+                            calculateRemainingTime()
                         }
-                    }
-                    
-                    
-//                    Button(action: {
-//                        isImagePickerTapped.toggle()
-//                        print("표지 버튼 클릭됨!")
-//                    }) {
-//                        VStack(spacing: 8) {
-//                            Image(systemName: "photo.on.rectangle.angled")
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(width: 40, height: 40)
-//                                .foregroundColor(.gray)
-//                            
-//                            Text("표지를 선택해주세요")
-//                                .font(.footnote)
-//                                .foregroundColor(.gray)
-//                        }
-//                        .frame(maxWidth: .infinity, minHeight: 120)
-//                        .background(Color.gray.opacity(0.1))
-//                        .cornerRadius(16)
-//                    }//vstack
-                    
-                }
-                .padding(.horizontal)
-                
-                // 추가 버튼
-                Button(action: {
-                    guard let pages = Int(totalPages) else { return }
-                    let newBook = Book(imageName: "default-book", title: title, author: author)
-                    onAdd(newBook)
-                    //dismiss()
-                    scheduleNotification(at: wakeUp)
-                }) {
-                    Text("완료하기")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.purple)
-                        .cornerRadius(12)
                         .padding(.horizontal)
-                }
-                .padding(.bottom, 20)
+                        .onAppear(perform: requestNotificationPermission)
+                    
+                    //종료시간
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("종료 시간")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        
+                        DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(16)
+                            .onChange(of: endTime) { _ in
+                                calculateRemainingTime()
+                            }
+                            .padding(.horizontal)
+                        // ✅ 표지 추가 버튼
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("표지")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            PhotosPicker(
+                                selection: $photoItem,
+                                matching: .images,
+                                photoLibrary: .shared()
+                            ) {
+                                if let image = selectedImage {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 80, height: 80)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                                        .shadow(radius: 3)
+                                } else {
+                                    Image(systemName: "photo.on.rectangle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(.gray)
+                                        .padding()
+                                }
+                            }
+                            
+                            
+                            //                    Button(action: {
+                            //                        isImagePickerTapped.toggle()
+                            //                        print("표지 버튼 클릭됨!")
+                            //                    }) {
+                            //                        VStack(spacing: 8) {
+                            //                            Image(systemName: "photo.on.rectangle.angled")
+                            //                                .resizable()
+                            //                                .scaledToFit()
+                            //                                .frame(width: 40, height: 40)
+                            //                                .foregroundColor(.gray)
+                            //
+                            //                            Text("표지를 선택해주세요")
+                            //                                .font(.footnote)
+                            //                                .foregroundColor(.gray)
+                            //                        }
+                            //                        .frame(maxWidth: .infinity, minHeight: 120)
+                            //                        .background(Color.gray.opacity(0.1))
+                            //                        .cornerRadius(16)
+                            //                    }//vstack
+                            
+                        }
+                        .padding(.horizontal)
+                        
+                        // 추가 버튼
+                        Button(action: {
+                            guard let pages = Int(totalPages) else { return }
+                            let newBook = Book(imageName: "default-book", title: title, author: author)
+                            onAdd(newBook)
+                            //dismiss()
+                            scheduleNotification(at: wakeUp)
+                        }) {
+                            Text("완료하기")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.purple)
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+                        }
+                        .padding(.bottom, 20)
+                    }
+                    .padding(.top, 20)
+                }//vstack
             }
-            .padding(.top, 20)
-        }//vstack
+        }
     }
 }

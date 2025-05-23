@@ -8,6 +8,7 @@ struct BookListView: View {
         Book(imageName: "book4", title: "퓨처 셀프", author: "벤저민 하디")
     ]
     @State private var showAddBookSheet = false
+    @State private var remainingTime: TimeInterval = 0
 
     // 그리드 2열 구성
     let columns = [
@@ -69,7 +70,7 @@ struct BookListView: View {
                 }
             )
             .sheet(isPresented: $showAddBookSheet) {
-                AddBookView { newBook in
+                AddBookView(remainingTime: $remainingTime) { newBook in
                     books.append(newBook)
                     showAddBookSheet = false
                 }
