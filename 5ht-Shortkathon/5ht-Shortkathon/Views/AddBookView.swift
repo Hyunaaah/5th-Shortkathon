@@ -36,7 +36,7 @@ struct AddBookView: View {
             
             // 독서 시간 선택
             VStack(alignment: .leading, spacing: 8) {
-                Text("독서 시간")
+                Text("일간 독서 시간")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
