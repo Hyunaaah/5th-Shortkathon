@@ -11,9 +11,7 @@ import SwiftUI
 struct _ht_ShortkathonApp: App {
     var body: some Scene {
         WindowGroup {
-            TimerCircleView()
-            AlarmSliderView()
-            HourMinuteClockView()
+            MainPage()
             
         }
     }
