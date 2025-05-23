@@ -43,17 +43,11 @@ struct ContentView: View {
                     }
                     .tag(1)
                 
-                SetAlarmView()
+                MainPage()
                     .tabItem{
                         Image(systemName: selectedTab == 2 ? "alarm.fill" : "alarm")
                     }
                     .tag(2)
-                
-                AccountView()
-                    .tabItem{
-                        Image(systemName: selectedTab == 3 ? "person.fill" : "person")
-                    }
-                    .tag(3)
                 
                
             } // TabView
