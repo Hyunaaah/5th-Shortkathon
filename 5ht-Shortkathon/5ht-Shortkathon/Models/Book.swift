@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Book: Identifiable {
+struct Book: Codable, Identifiable {
     let id = UUID()
     var imageName: String 
     var title: String
